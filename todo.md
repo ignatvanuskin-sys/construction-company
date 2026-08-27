@@ -44,7 +44,9 @@
 - [x] Add a Vercel-compatible build/runtime configuration without deploying from this session.
 - [x] Verify the corrected output locally and document the safe Vercel publish step.
 
-- [ ] Diagnose the Vercel deployment at commit 010e7c1 where scrolling and images fail.
-- [ ] Replace non-portable image references with Vercel-safe asset URLs or bundled public assets.
-- [ ] Restore normal document scrolling and verify mobile/desktop behavior.
-- [ ] Rebuild, push the fix, and verify the new production deployment.
+- [x] Diagnose the Vercel deployment at commit 010e7c1 where scrolling and images fail.
+- [x] Replace non-portable image references with Vercel-safe asset URLs or bundled public assets.
+- [x] Restore normal document scrolling and verify mobile/desktop behavior.
+- [x] Rebuild, push the fix, and verify the new production deployment.
+
+- [x] Run a fresh mobile verification after the Vercel scroll-lock and image fix, confirming touch scrolling, image loading, and form usability.

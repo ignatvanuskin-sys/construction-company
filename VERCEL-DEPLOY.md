@@ -26,3 +26,7 @@ Cloudflare Turnstile must remain disabled unless both Turnstile variables are pr
 7. In Umami, filter by the production hostname and confirm `preloader_complete`, `contact_form_view`, `contact_form_submit_attempt`, `contact_form_submit_success`, `liquid_metal_active` or `liquid_metal_fallback`, `cursor_target_hover`, `project_card_hover`, and `process_orb_interaction`.
 
 The local Vercel build has been validated. The current live deployment must be redeployed before it can be considered verified, because the earlier production URL was observed serving source code.
+
+## Latest deployment verification
+
+The GitHub-connected deployment at `https://construction-company-hjqa4regv-bbc-b318.vercel.app` reached `Ready` after commit `d904be4`. The live page now renders the NOVA FORMA interface, uses the public CDN image URLs, exposes the full page content, and no longer serves source code. The scroll issue was caused by the preloader leaving `html.is-loading { overflow: hidden; }` active after returning `null`; the lifecycle now removes that class before hiding the preloader.
