@@ -9,7 +9,11 @@ export default function Preloader({ mark }: PreloaderProps) {
 
   useEffect(() => {
     const exitTimer = window.setTimeout(() => setLeaving(true), 780);
-    const removeTimer = window.setTimeout(() => { setVisible(false); trackEvent("preloader_complete"); }, 1180);
+    const removeTimer = window.setTimeout(() => {
+      document.documentElement.classList.remove("is-loading");
+      setVisible(false);
+      trackEvent("preloader_complete");
+    }, 1180);
     document.documentElement.classList.add("is-loading");
     return () => {
       window.clearTimeout(exitTimer);
