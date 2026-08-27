@@ -20,10 +20,12 @@
 - [x] Run final tests, build, desktop/mobile verification, and deployment-readiness checks.
 - [x] Save the final checkpoint and deliver both the website version and reusable skill.
 
-- [ ] Keep Turnstile integration production-ready but disabled until the user supplies Cloudflare keys.
+- [x] Keep Turnstile integration production-ready but disabled until the user supplies Cloudflare keys.
 - [ ] Send the final project commit to https://github.com/ignatvanuskin-sys/construction-company.
 
-- [ ] Add optional Cloudflare Turnstile widget and server Siteverify validation; production keys intentionally not configured by user.
-- [ ] Track successful form sends and meaningful animation interactions with existing analytics.
-- [ ] Run final Turnstile/analytics tests, build, and visual verification.
-- [ ] Save a new checkpoint with the Turnstile and analytics changes.
+- [x] Add optional Cloudflare Turnstile widget and server Siteverify validation; production keys intentionally not configured by user.
+- [x] Track successful form sends and meaningful animation interactions with existing analytics.
+- [x] Run final Turnstile/analytics tests, build, and visual verification.
+- [x] Save a new checkpoint with the Turnstile and analytics changes.
+
+- [ ] Push local release commit `c7745fa` to the GitHub repository after GitHub authentication is enabled.
