@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filterProjects, projectFilters, projectRegions, projectYears } from "./Home";
+import { filterProjects, paginateProjects, projectFilters, projectRegions, projectYears } from "./Home";
 
 const allFilters = { category: "Все", year: "Все", region: "Все", query: "" };
 
@@ -24,6 +24,13 @@ describe("project filters", () => {
     expect(filterProjects({ ...allFilters, query: "петербург" })).toEqual([
       expect.objectContaining({ slug: "port" }),
     ]);
+  });
+
+  it("reveals project cards in bounded increments", () => {
+    const projects = filterProjects(allFilters);
+    expect(paginateProjects(projects, 2)).toHaveLength(2);
+    expect(paginateProjects(projects, 10)).toHaveLength(4);
+    expect(paginateProjects(projects, -1)).toEqual([]);
   });
 
   it("returns an empty collection for an unavailable combination", () => {

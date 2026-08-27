@@ -78,3 +78,16 @@ html.is-loading{overflow:hidden}.preloader{position:fixed;inset:0;z-index:2000;d
 @keyframes project-grid-out{from{opacity:1}to{opacity:.15}}
 @keyframes project-card-out{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px) scale(.985)}}
 @media(prefers-reduced-motion:reduce){.project-grid-animated.is-exiting,.project-grid-animated.is-exiting .project-card{animation:none;opacity:1;transform:none}}
+.project-load-more{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:42px}
+.project-load-more-button{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--bronze);background:transparent;color:var(--milk);font:inherit;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;cursor:pointer;transition:background .2s var(--ease),color .2s var(--ease),transform .16s var(--ease)}
+.project-load-more-button span{color:var(--bronze)}
+.project-load-more-button:hover{background:var(--milk);color:var(--ink)}
+.project-load-more-button:hover span{color:var(--ink)}
+.project-load-more-button:active{transform:scale(.97)}
+.project-load-more-button:focus-visible{outline:1px solid var(--bronze);outline-offset:5px}
+.project-load-more-note{color:var(--muted);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:800px){.project-load-more{align-items:flex-start;flex-direction:column;gap:12px;margin-top:34px}.project-load-more-button{width:100%;justify-content:center;min-height:48px}.project-load-more-note{font-size:8px}}
+.project-updating{display:block;margin-top:12px;color:var(--bronze);font-size:9px;letter-spacing:.1em;text-transform:uppercase;animation:project-status-pulse .8s ease-in-out infinite alternate}
+.project-load-more-button:disabled{cursor:wait;opacity:.55}
+@keyframes project-status-pulse{from{opacity:.45}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.project-updating{animation:none;opacity:1}}

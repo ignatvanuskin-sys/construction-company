@@ -74,3 +74,11 @@
 - [x] Add animated project-card enter/exit transitions with reduced-motion support.
 - [x] Update unit tests and run type-check, tests, production build, and desktop/mobile visual verification.
 - [x] Implement true project-card exit transitions when filtered results are removed, with a reduced-motion fallback, then re-verify interactions.
+
+- [x] Add a project catalog page-size model and a «Показать еще» control that works with the current search and filters.
+- [x] Preserve filtered results while incrementally revealing cards, with accessible live feedback and analytics tracking.
+- [x] Apply final polish improvements to project discovery, mobile spacing, loading states, and CTA clarity.
+- [x] Update tests, run type-check, tests, production build, desktop/mobile verification, and save the final checkpoint.
+- [x] Announce the visible project count changes to assistive technology after «Показать еще».
+- [x] Add an explicit project-list updating state and clarify the progressive-load CTA.
+- [x] Save a final checkpoint after the pagination polish changes.
