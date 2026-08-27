@@ -21,11 +21,25 @@
 - [x] Save the final checkpoint and deliver both the website version and reusable skill.
 
 - [x] Keep Turnstile integration production-ready but disabled until the user supplies Cloudflare keys.
-- [ ] Send the final project commit to https://github.com/ignatvanuskin-sys/construction-company.
+- [x] Send the final project commit to https://github.com/ignatvanuskin-sys/construction-company.
 
 - [x] Add optional Cloudflare Turnstile widget and server Siteverify validation; production keys intentionally not configured by user.
 - [x] Track successful form sends and meaningful animation interactions with existing analytics.
 - [x] Run final Turnstile/analytics tests, build, and visual verification.
 - [x] Save a new checkpoint with the Turnstile and analytics changes.
 
-- [ ] Push local release commit `c7745fa` to the GitHub repository after GitHub authentication is enabled.
+- [x] Push local release commit `c7745fa` to the GitHub repository after GitHub authentication is enabled.
+
+- [ ] Inspect the Vercel project and existing deployment/repository linkage.
+- [ ] Define a convenient Umami dashboard view for form and animation events.
+- [ ] Configure or document the production analytics variables and event taxonomy.
+- [ ] Verify the result and save a checkpoint if project files change.
+
+- [ ] Verify Vercel CLI availability and authentication for project `construction-company`.
+- [ ] Inspect Vercel project linkage and environment configuration through CLI.
+- [ ] Prepare Umami event viewing guidance/configuration compatible with Vercel.
+- [ ] Re-run readiness checks and report whether deployment can proceed.
+
+- [ ] Diagnose why the existing Vercel production URL renders source code instead of the app.
+- [ ] Add a Vercel-compatible build/runtime configuration without deploying from this session.
+- [ ] Verify the corrected output locally and document the safe Vercel publish step.
