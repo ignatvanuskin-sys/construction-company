@@ -10,11 +10,11 @@ import TurnstileWidget from "@/components/TurnstileWidget";
 import { trackEvent } from "@/lib/analytics";
 
 /** NOVA FORMA style: dark cinematic editorial, asymmetric architecture, bronze precision. */
-const hero = "/manus-storage/nova-forma-hero_32fadf23.png";
-const materials = "/manus-storage/nova-forma-materials_2ac250db.png";
-const interior = "/manus-storage/nova-forma-interior_0b4b98b6.png";
-const waterfront = "/manus-storage/nova-forma-project_3f402da0.png";
-const mark = "/manus-storage/nova-forma-mark_8f933ad3.png";
+const hero = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663894363217/PRiWkEKqJdzsSOmf.png";
+const materials = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663894363217/hWfvgAVboFJhzgVc.png";
+const interior = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663894363217/AcJwDFenlEsLzwiT.png";
+const waterfront = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663894363217/RKuckAROdUTAmpkD.png";
+const mark = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663894363217/WQHdhkpOeJSOmhIp.png";
 
 const projects = [
   { slug:"sosnovy-sklon", no:"01", name:"Сосновый склон", type:"Частная резиденция", meta:"Московская область · 640 м² · 2024", image:hero, tag:"Резиденция" },
