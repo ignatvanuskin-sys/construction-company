@@ -30,16 +30,16 @@
 
 - [x] Push local release commit `c7745fa` to the GitHub repository after GitHub authentication is enabled.
 
-- [ ] Inspect the Vercel project and existing deployment/repository linkage.
-- [ ] Define a convenient Umami dashboard view for form and animation events.
-- [ ] Configure or document the production analytics variables and event taxonomy.
+- [x] Inspect the Vercel project and existing deployment/repository linkage.
+- [x] Define a convenient Umami dashboard view for form and animation events.
+- [x] Configure or document the production analytics variables and event taxonomy.
 - [ ] Verify the result and save a checkpoint if project files change.
 
-- [ ] Verify Vercel CLI availability and authentication for project `construction-company`.
-- [ ] Inspect Vercel project linkage and environment configuration through CLI.
-- [ ] Prepare Umami event viewing guidance/configuration compatible with Vercel.
-- [ ] Re-run readiness checks and report whether deployment can proceed.
+- [x] Verify Vercel CLI availability and authentication for project `construction-company`.
+- [x] Inspect Vercel project linkage and environment configuration through CLI.
+- [x] Prepare Umami event viewing guidance/configuration compatible with Vercel.
+- [x] Re-run readiness checks and report whether deployment can proceed.
 
-- [ ] Diagnose why the existing Vercel production URL renders source code instead of the app.
-- [ ] Add a Vercel-compatible build/runtime configuration without deploying from this session.
-- [ ] Verify the corrected output locally and document the safe Vercel publish step.
+- [x] Diagnose why the existing Vercel production URL renders source code instead of the app.
+- [x] Add a Vercel-compatible build/runtime configuration without deploying from this session.
+- [x] Verify the corrected output locally and document the safe Vercel publish step.
