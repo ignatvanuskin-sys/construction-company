@@ -60,3 +60,10 @@
 - [x] Split route and motion components so the initial JavaScript payload is smaller.
 - [x] Improve mobile navigation accessibility and project-card spacing/typography with fresh verification.
 - [x] Capture fresh desktop and mobile screenshots after the FAQ/performance pass, then save the checkpoint.
+
+- [x] Audit the current homepage, project routes, navigation, forms, analytics, SEO, accessibility, responsiveness, and performance for actionable issues.
+- [x] Add an accessible project filter by object type with an all-projects state, result count, empty state, and analytics event.
+- [x] Apply priority audit fixes across UX, mobile layout, accessibility, SEO metadata, and conversion details without inventing testimonials or customer data.
+- [x] Add or update automated tests covering project filtering and any changed behavior.
+- [x] Run type-check, tests, production build, desktop/mobile visual verification, and save a new checkpoint.
+- [x] Add an explicit conversion improvement with clearer inquiry reassurance and verify it in the form layout.
