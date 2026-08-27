@@ -50,3 +50,13 @@
 - [x] Rebuild, push the fix, and verify the new production deployment.
 
 - [x] Run a fresh mobile verification after the Vercel scroll-lock and image fix, confirming touch scrolling, image loading, and form usability.
+
+- [x] Analyze current FAQ placement, asset loading, and mobile layout risks.
+- [x] Add an accessible FAQ accordion to the homepage.
+- [x] Optimize image loading, script loading, and visual effect costs.
+- [x] Improve mobile navigation, typography, spacing, form, and project layouts.
+- [x] Run tests, production build, desktop/mobile screenshots, and save a checkpoint.
+
+- [x] Split route and motion components so the initial JavaScript payload is smaller.
+- [x] Improve mobile navigation accessibility and project-card spacing/typography with fresh verification.
+- [x] Capture fresh desktop and mobile screenshots after the FAQ/performance pass, then save the checkpoint.
