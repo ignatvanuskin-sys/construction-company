@@ -19,14 +19,24 @@ const waterfront = "https://files.manuscdn.com/user_upload_by_module/session_fil
 const mark = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663894363217/WQHdhkpOeJSOmhIp.png";
 
 const projects = [
-  { slug:"sosnovy-sklon", no:"01", name:"Сосновый склон", type:"Частная резиденция", category:"Резиденции", meta:"Московская область · 640 м² · 2024", image:hero, tag:"Резиденция" },
-  { slug:"liniya-gorizonta", no:"02", name:"Линия горизонта", type:"Частный дом", category:"Резиденции", meta:"Истринский район · 420 м² · 2023", image:interior, tag:"Дом" },
-  { slug:"port", no:"03", name:"Пространство «Порт»", type:"Офис и шоурум", category:"Коммерция", meta:"Санкт-Петербург · 1 850 м² · 2024", image:waterfront, tag:"Коммерция" },
-  { slug:"severny-sad", no:"04", name:"Северный сад", type:"Бутик-отель", category:"Гостиницы", meta:"Ленинградская область · 3 200 м² · 2022", image:materials, tag:"Гостеприимство" },
+  { slug:"sosnovy-sklon", no:"01", name:"Сосновый склон", type:"Частная резиденция", category:"Резиденции", year:"2024", region:"Московская область", keywords:"лесной дом загородная архитектура", meta:"Московская область · 640 м² · 2024", image:hero, tag:"Резиденция" },
+  { slug:"liniya-gorizonta", no:"02", name:"Линия горизонта", type:"Частный дом", category:"Резиденции", year:"2023", region:"Истринский район", keywords:"частный дом интерьер панорамное остекление", meta:"Истринский район · 420 м² · 2023", image:interior, tag:"Дом" },
+  { slug:"port", no:"03", name:"Пространство «Порт»", type:"Офис и шоурум", category:"Коммерция", year:"2024", region:"Санкт-Петербург", keywords:"офис шоурум коммерческое пространство", meta:"Санкт-Петербург · 1 850 м² · 2024", image:waterfront, tag:"Коммерция" },
+  { slug:"severny-sad", no:"04", name:"Северный сад", type:"Бутик-отель", category:"Гостиницы", year:"2022", region:"Ленинградская область", keywords:"отель гостеприимство ландшафт", meta:"Ленинградская область · 3 200 м² · 2022", image:materials, tag:"Гостеприимство" },
 ];
 export const projectFilters = ["Все", ...Array.from(new Set(projects.map(project => project.category)))];
-export function filterProjects(selected: string) {
-  return selected === "Все" ? projects : projects.filter(project => project.category === selected);
+export const projectYears = ["Все", ...Array.from(new Set(projects.map(project => project.year))).sort((a, b) => Number(b) - Number(a))];
+export const projectRegions = ["Все", ...Array.from(new Set(projects.map(project => project.region)))];
+export type ProjectFilterState = { category: string; year: string; region: string; query: string };
+export function filterProjects({ category, year, region, query }: ProjectFilterState) {
+  const normalizedQuery = query.trim().toLocaleLowerCase("ru-RU");
+  return projects.filter(project => {
+    const matchesCategory = category === "Все" || project.category === category;
+    const matchesYear = year === "Все" || project.year === year;
+    const matchesRegion = region === "Все" || project.region === region;
+    const searchableText = [project.name, project.type, project.category, project.year, project.region, project.tag, project.keywords].join(" ").toLocaleLowerCase("ru-RU");
+    return matchesCategory && matchesYear && matchesRegion && (!normalizedQuery || searchableText.includes(normalizedQuery));
+  });
 }
 const services = [
   ["01", "Частные резиденции", "Строительство современных домов и загородных комплексов."],
@@ -77,14 +87,47 @@ function Inquiry(){
 
 export default function Home(){
   const [selectedProjectFilter, setSelectedProjectFilter] = useState("Все");
-  const filteredProjects = useMemo(() => filterProjects(selectedProjectFilter), [selectedProjectFilter]);
+  const [selectedProjectYear, setSelectedProjectYear] = useState("Все");
+  const [selectedProjectRegion, setSelectedProjectRegion] = useState("Все");
+  const [projectQuery, setProjectQuery] = useState("");
+  const filteredProjects = useMemo(() => filterProjects({ category: selectedProjectFilter, year: selectedProjectYear, region: selectedProjectRegion, query: projectQuery }), [selectedProjectFilter, selectedProjectYear, selectedProjectRegion, projectQuery]);
+  const [displayedProjects, setDisplayedProjects] = useState(() => filteredProjects);
+  const [exitingProjectSlugs, setExitingProjectSlugs] = useState<Set<string>>(() => new Set());
+  const [projectGridVersion, setProjectGridVersion] = useState(0);
+  useEffect(() => {
+    const nextSlugs = new Set(filteredProjects.map(project => project.slug));
+    setDisplayedProjects(previous => {
+      const previousSlugs = new Set(previous.map(project => project.slug));
+      const additions = filteredProjects.filter(project => !previousSlugs.has(project.slug));
+      return [...previous, ...additions];
+    });
+    setExitingProjectSlugs(previous => {
+      const next = new Set(previous);
+      displayedProjects.forEach(project => { if (!nextSlugs.has(project.slug)) next.add(project.slug); });
+      return next;
+    });
+    const timer = window.setTimeout(() => {
+      setDisplayedProjects(filteredProjects);
+      setExitingProjectSlugs(new Set());
+      setProjectGridVersion(version => version + 1);
+    }, 220);
+    return () => window.clearTimeout(timer);
+  }, [filteredProjects]);
+  const hasProjectFilters = selectedProjectFilter !== "Все" || selectedProjectYear !== "Все" || selectedProjectRegion !== "Все" || projectQuery.trim() !== "";
   useEffect(() => {
     if (selectedProjectFilter !== "Все") trackEvent("project_filter_select", { filter: selectedProjectFilter });
   }, [selectedProjectFilter]);
+  useEffect(() => {
+    if (selectedProjectYear !== "Все") trackEvent("project_year_select", { year: selectedProjectYear });
+  }, [selectedProjectYear]);
+  useEffect(() => {
+    if (selectedProjectRegion !== "Все") trackEvent("project_region_select", { region: selectedProjectRegion });
+  }, [selectedProjectRegion]);
+  const resetProjectFilters = () => { setSelectedProjectFilter("Все"); setSelectedProjectYear("Все"); setSelectedProjectRegion("Все"); setProjectQuery(""); };
   return <div id="top" className="site"><Preloader mark={mark}/><Header/><main><section className="hero"><img src={hero} alt="Современная частная резиденция NOVA FORMA" fetchPriority="high" decoding="async"/><Suspense fallback={null}><LiquidMetalHero/></Suspense><div className="hero-shade"/><div className="hero-content"><p className="eyebrow">Architecture & Construction <span>· Москва / Санкт-Петербург</span></p><h1>Создаем<br/><em>пространства,</em><br/>которые остаются</h1><p className="hero-sub">Строительство частных резиденций, коммерческих объектов и общественных пространств с полным контролем качества.</p><div className="hero-actions"><a className="btn btn-light" href="#projects">Посмотреть проекты <ArrowDownRight size={17}/></a><a className="btn btn-ghost" href="#contact">Обсудить проект <ArrowUpRight size={17}/></a></div></div><div className="hero-index">01 <span>/</span> 07</div><div className="scroll-note">Scroll to explore <ArrowDownRight size={15}/></div></section>
 <section id="about" className="about"><div className="about-aside"><SectionLabel no="01" children="О компании"/><span className="vertical-note">NOVA FORMA · SINCE 2012</span></div><div className="about-copy"><h2>От идеи<br/><em>до пространства</em></h2><p>NOVA FORMA объединяет архитектуру, инженерию и строительство в единую систему. Мы создаем объекты, в которых каждая деталь подчинена общей идее — от первого эскиза до финального света в интерьере.</p><a href="#process" className="text-link">Как мы работаем <ArrowUpRight size={16}/></a></div><div className="stats"><div><strong>12</strong><span>лет опыта</span></div><div><strong>86</strong><span>реализованных<br/>проектов</span></div><div><strong>42</strong><span>специалиста</span></div><div><strong>5</strong><span>лет гарантии</span></div></div></section>
 <section id="services" className="services"><SectionLabel no="02" children="Компетенции"/><div className="section-heading"><h2>Полный цикл.<br/><em>Одна команда.</em></h2><p>Берем на себя весь путь проекта: от предпроектной аналитики до передачи готового объекта владельцу.</p></div><div className="service-list">{services.map(([no,title,text])=><div className="service-item" key={no}><span className="service-no">{no}</span><h3>{title}</h3><p>{text}</p><Plus className="plus" size={20}/></div>)}</div></section>
-<section id="projects" className="projects"><SectionLabel no="03" children="Избранные проекты"/><div className="section-heading"><h2>Пространства<br/><em>с характером</em></h2><a className="text-link" href="#contact">Запросить портфолио <ArrowUpRight size={16}/></a></div><div className="project-filter-bar" role="group" aria-label="Фильтр проектов по типу объекта"><span className="project-filter-label">Тип объекта</span><div className="project-filters">{projectFilters.map(filter => <button type="button" key={filter} className={selectedProjectFilter === filter ? "is-active" : ""} aria-pressed={selectedProjectFilter === filter} onClick={() => setSelectedProjectFilter(filter)}>{filter}</button>)}</div><span className="project-filter-count" aria-live="polite">{filteredProjects.length} {filteredProjects.length === 1 ? "проект" : "проекта"}</span></div>{filteredProjects.length === 0 ? <p className="project-empty">Проекты этого типа появятся в портфолио совсем скоро.</p> : <div className="project-grid">{filteredProjects.map((p,i)=><Link href={`/projects/${p.slug}`} onMouseEnter={() => trackEvent("project_card_hover", { project: p.slug })} className={`project-card card-${i+1}`} key={p.slug}><div className="project-image"><img src={p.image} alt={p.name} loading="lazy" decoding="async"/><span className="project-tag">{p.tag}</span><span className="project-arrow"><ArrowUpRight size={20}/></span></div><div className="project-meta"><span>{p.no}</span><div><h3>{p.name}</h3><p>{p.type} · {p.meta}</p></div></div></Link>)}</div>}</section>
+<section id="projects" className="projects"><SectionLabel no="03" children="Избранные проекты"/><div className="section-heading"><h2>Пространства<br/><em>с характером</em></h2><a className="text-link" href="#contact">Запросить портфолио <ArrowUpRight size={16}/></a></div><div className="project-search-row"><label className="project-search"><span className="sr-only">Поиск по проектам</span><input type="search" value={projectQuery} onChange={event => setProjectQuery(event.target.value)} placeholder="Найти проект или ключевое слово" aria-label="Поиск по проектам"/><span aria-hidden="true">⌕</span></label>{hasProjectFilters && <button type="button" className="project-reset" onClick={resetProjectFilters}>Сбросить фильтры</button>}</div><div className="project-filter-bar" role="group" aria-label="Фильтры проектов"><div className="project-filter-control"><span className="project-filter-label">Тип объекта</span><div className="project-filters">{projectFilters.map(filter => <button type="button" key={filter} className={selectedProjectFilter === filter ? "is-active" : ""} aria-pressed={selectedProjectFilter === filter} onClick={() => setSelectedProjectFilter(filter)}>{filter}</button>)}</div></div><label className="project-select"><span>Год</span><select value={selectedProjectYear} onChange={event => setSelectedProjectYear(event.target.value)} aria-label="Фильтр по году"><option value="Все">Все годы</option>{projectYears.filter(year => year !== "Все").map(year => <option key={year} value={year}>{year}</option>)}</select></label><label className="project-select"><span>Регион</span><select value={selectedProjectRegion} onChange={event => setSelectedProjectRegion(event.target.value)} aria-label="Фильтр по региону"><option value="Все">Все регионы</option>{projectRegions.filter(region => region !== "Все").map(region => <option key={region} value={region}>{region}</option>)}</select></label><span className="project-filter-count" aria-live="polite">{filteredProjects.length} {filteredProjects.length === 1 ? "проект" : "проекта"}</span></div>{displayedProjects.length === 0 ? <p className="project-empty">Ничего не найдено. Попробуйте изменить запрос или сбросить фильтры.</p> : <div key={projectGridVersion} className="project-grid project-grid-animated">{displayedProjects.map((p,i)=>{ const isExiting = exitingProjectSlugs.has(p.slug); return <Link href={`/projects/${p.slug}`} onMouseEnter={() => trackEvent("project_card_hover", { project: p.slug })} aria-hidden={isExiting} tabIndex={isExiting ? -1 : undefined} className={`project-card card-${i+1}${isExiting ? " is-exiting" : ""}`} key={p.slug}><div className="project-image"><img src={p.image} alt={p.name} loading="lazy" decoding="async"/><span className="project-tag">{p.tag}</span><span className="project-arrow"><ArrowUpRight size={20}/></span></div><div className="project-meta"><span>{p.no}</span><div><h3>{p.name}</h3><p>{p.type} · {p.meta}</p></div></div></Link>})}</div>}</section>
 <section id="process" className="process"><Suspense fallback={null}><OrbField/></Suspense><Reveal className="process-intro"><SectionLabel no="04" children="Как мы работаем"/><h2>Спокойствие<br/><em>в каждом шаге</em></h2><p>Прозрачный процесс, персональный руководитель и контроль качества на всем пути.</p></Reveal><div className="timeline">{steps.map(([no,title,text],i)=><Reveal className="step" delay={i*45} key={no}><span>{no}</span><div><h3>{title}</h3><p>{text}</p></div></Reveal>)}</div></section>
 <section className="materials"><div className="material-image"><img src={materials} alt="Материалы NOVA FORMA" loading="lazy" decoding="async"/></div><div className="material-copy"><SectionLabel no="05" children="Материалы и технологии"/><h2>Форма<br/><em>имеет вес</em></h2><p>Архитектурный бетон, натуральный камень, инженерная древесина и панорамное остекление. Материалы, выбранные за выразительность и срок службы.</p><div className="material-tags"><span>01 · Бетон</span><span>02 · Камень</span><span>03 · Древесина</span><span>04 · Остекление</span><span>05 · Металл</span><span>06 · Инженерия</span></div></div></section>
 <section className="why"><SectionLabel no="06" children="Почему NOVA FORMA"/><div className="why-content"><h2>Важное<br/><em>остается</em></h2><div className="why-list">{["Единая команда на всех этапах","Прозрачная смета без скрытых расходов","Персональный руководитель проекта","Фото- и видеоотчеты со стройплощадки","Проверка материалов и инженерных узлов","Согласованный календарный план","Гарантия 5 лет","Архитектурная и инженерная экспертиза"].map((x,i)=><div key={x}><span>0{i+1}</span>{x}<Check size={15}/></div>)}</div></div></section>

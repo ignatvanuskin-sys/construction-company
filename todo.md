@@ -67,3 +67,10 @@
 - [x] Add or update automated tests covering project filtering and any changed behavior.
 - [x] Run type-check, tests, production build, desktop/mobile visual verification, and save a new checkpoint.
 - [x] Add an explicit conversion improvement with clearer inquiry reassurance and verify it in the form layout.
+
+- [x] Add project metadata for implementation year, region, and searchable keywords.
+- [x] Add combined project filtering by category, year, and region with reset controls and live result feedback.
+- [x] Add text search across project names, types, regions, tags, and keywords.
+- [x] Add animated project-card enter/exit transitions with reduced-motion support.
+- [x] Update unit tests and run type-check, tests, production build, and desktop/mobile visual verification.
+- [x] Implement true project-card exit transitions when filtered results are removed, with a reduced-motion fallback, then re-verify interactions.

@@ -48,3 +48,33 @@ html.is-loading{overflow:hidden}.preloader{position:fixed;inset:0;z-index:2000;d
 .project-empty{min-height:180px;display:grid;place-items:center;border:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;padding:28px}
 @media(max-width:800px){.project-filter-bar{display:block;margin-bottom:34px}.project-filter-label{display:block;margin-bottom:13px}.project-filters{gap:6px}.project-filters button{font-size:10px;padding:9px 11px}.project-filter-count{display:block;margin:15px 0 0;font-size:9px}.project-empty{min-height:150px;font-size:12px}}
 .form-reassurance{margin:13px 0 0;color:var(--muted);font-size:9px;line-height:1.6;letter-spacing:.08em;text-transform:uppercase}
+
+/* Project discovery: search and multi-axis filters stay compact on the editorial grid. */
+.project-search-row{display:flex;align-items:center;gap:18px;margin:0 0 16px}
+.project-search{position:relative;display:flex;align-items:center;max-width:420px;flex:1;border-bottom:1px solid var(--line)}
+.project-search input{width:100%;border:0;background:transparent;color:var(--milk);font:inherit;font-size:12px;padding:12px 32px 12px 0;outline:none}
+.project-search input::placeholder{color:var(--muted)}
+.project-search:focus-within{border-color:var(--bronze)}
+.project-search>span{position:absolute;right:4px;color:var(--bronze);font-size:20px;line-height:1;pointer-events:none;transform:rotate(-20deg)}
+.project-reset{border:0;background:transparent;color:var(--bronze);font:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 0;cursor:pointer}
+.project-reset:hover{text-decoration:underline;text-underline-offset:4px}
+.project-reset:focus-visible{outline:1px solid var(--bronze);outline-offset:5px}
+.project-filter-bar{align-items:flex-end;gap:24px}
+.project-filter-control{flex:1;min-width:0}
+.project-filter-control .project-filter-label{display:block;margin-bottom:10px}
+.project-select{display:flex;flex-direction:column;gap:9px;min-width:145px;color:var(--muted);font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.project-select select{appearance:none;border:1px solid var(--line);border-radius:0;background:#1d1e1b;color:var(--milk);font:inherit;font-size:11px;letter-spacing:0;padding:10px 28px 10px 11px;background-image:linear-gradient(45deg,transparent 50%,var(--bronze) 50%),linear-gradient(135deg,var(--bronze) 50%,transparent 50%);background-position:calc(100% - 15px) 14px,calc(100% - 11px) 14px;background-size:4px 4px,4px 4px;background-repeat:no-repeat;cursor:pointer}
+.project-select select:focus-visible{outline:1px solid var(--bronze);outline-offset:4px}
+.project-grid-animated{animation:project-grid-in .35s var(--ease) both}
+.project-grid-animated .project-card{animation:project-card-in .45s var(--ease) both;animation-delay:calc(var(--project-index, 0) * 45ms)}
+@keyframes project-grid-in{from{opacity:.35}to{opacity:1}}
+@keyframes project-card-in{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:800px){.project-search-row{display:block;margin-bottom:18px}.project-search{max-width:none}.project-reset{margin-top:10px}.project-filter-bar{display:flex;align-items:stretch;flex-direction:column;gap:18px}.project-filter-control{width:100%}.project-select{width:100%;min-width:0}.project-filter-count{margin:0}.project-grid-animated .project-card{animation-delay:calc(var(--project-index, 0) * 30ms)}}
+@media(prefers-reduced-motion:reduce){.project-grid-animated,.project-grid-animated .project-card{animation:none}}
+.project-grid-animated .project-card:nth-child(2){animation-delay:45ms}.project-grid-animated .project-card:nth-child(3){animation-delay:90ms}.project-grid-animated .project-card:nth-child(4){animation-delay:135ms}
+@media(max-width:800px){.project-grid-animated .project-card:nth-child(2){animation-delay:30ms}.project-grid-animated .project-card:nth-child(3){animation-delay:60ms}.project-grid-animated .project-card:nth-child(4){animation-delay:90ms}}
+.project-grid-animated.is-exiting{animation:project-grid-out .18s var(--ease) both;pointer-events:none}
+.project-grid-animated.is-exiting .project-card{animation:project-card-out .18s var(--ease) both}
+@keyframes project-grid-out{from{opacity:1}to{opacity:.15}}
+@keyframes project-card-out{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px) scale(.985)}}
+@media(prefers-reduced-motion:reduce){.project-grid-animated.is-exiting,.project-grid-animated.is-exiting .project-card{animation:none;opacity:1;transform:none}}
