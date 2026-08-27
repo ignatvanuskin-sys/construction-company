@@ -92,4 +92,4 @@
 - [x] Track empty-state reset analytics and cover reset state behavior with a pure unit test.
 - [x] Narrow the final polish checklist to the catalog and verified existing route/form states.
 - [x] Save a new release checkpoint after the empty-state and sorting pass.
-- [ ] Save a new project checkpoint containing the empty state, sorting, reset analytics, and reset-state tests.
+- [x] Save a new project checkpoint containing the empty state, sorting, reset analytics, and reset-state tests.
