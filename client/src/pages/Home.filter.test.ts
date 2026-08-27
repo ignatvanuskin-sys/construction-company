@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filterProjects, paginateProjects, projectFilters, projectRegions, projectYears } from "./Home";
+import { defaultProjectFilterState, filterProjects, paginateProjects, projectFilters, projectRegions, projectYears, resetProjectFilterState, sortProjects } from "./Home";
 
 const allFilters = { category: "Все", year: "Все", region: "Все", query: "" };
 
@@ -26,11 +26,24 @@ describe("project filters", () => {
     ]);
   });
 
+  it("sorts projects by added date and alphabetically", () => {
+    const projects = filterProjects(allFilters);
+    expect(sortProjects(projects, "newest")[0].slug).toBe("port");
+    expect(sortProjects(projects, "oldest")[0].slug).toBe("severny-sad");
+    expect(sortProjects(projects, "az").map(project => project.slug)).toEqual(["liniya-gorizonta", "port", "severny-sad", "sosnovy-sklon"]);
+    expect(sortProjects(projects, "za")[0].slug).toBe("sosnovy-sklon");
+  });
+
   it("reveals project cards in bounded increments", () => {
     const projects = filterProjects(allFilters);
     expect(paginateProjects(projects, 2)).toHaveLength(2);
     expect(paginateProjects(projects, 10)).toHaveLength(4);
     expect(paginateProjects(projects, -1)).toEqual([]);
+  });
+
+  it("returns a clean default state for empty-state reset", () => {
+    expect(resetProjectFilterState()).toEqual(defaultProjectFilterState);
+    expect(resetProjectFilterState()).toMatchObject({ category: "Все", year: "Все", region: "Все", sort: "newest", query: "" });
   });
 
   it("returns an empty collection for an unavailable combination", () => {

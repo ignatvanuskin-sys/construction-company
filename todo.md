@@ -82,3 +82,14 @@
 - [x] Announce the visible project count changes to assistive technology after «Показать еще».
 - [x] Add an explicit project-list updating state and clarify the progressive-load CTA.
 - [x] Save a final checkpoint after the pagination polish changes.
+
+- [x] Audit all public routes, project detail pages, catalog states, form states, SEO metadata, accessibility, and production configuration.
+- [x] Add a premium empty state with clear no-results copy, reset search/filters action, and accessible status messaging.
+- [x] Add project sorting by newest/oldest added date and alphabetical order, preserving active filters and pagination.
+- [x] Add analytics and tests for sorting, empty-state reset, and pagination interactions.
+- [x] Apply final visual and edge-case polish across the catalog desktop/mobile states and verify the existing project detail, navigation, and inquiry flows.
+- [x] Run production checks and save the final release checkpoint.
+- [x] Track empty-state reset analytics and cover reset state behavior with a pure unit test.
+- [x] Narrow the final polish checklist to the catalog and verified existing route/form states.
+- [x] Save a new release checkpoint after the empty-state and sorting pass.
+- [ ] Save a new project checkpoint containing the empty state, sorting, reset analytics, and reset-state tests.
