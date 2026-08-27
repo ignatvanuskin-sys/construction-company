@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 type PreloaderProps = { mark: string };
 
@@ -8,7 +9,7 @@ export default function Preloader({ mark }: PreloaderProps) {
 
   useEffect(() => {
     const exitTimer = window.setTimeout(() => setLeaving(true), 780);
-    const removeTimer = window.setTimeout(() => setVisible(false), 1180);
+    const removeTimer = window.setTimeout(() => { setVisible(false); trackEvent("preloader_complete"); }, 1180);
     document.documentElement.classList.add("is-loading");
     return () => {
       window.clearTimeout(exitTimer);

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 /** NOVA FORMA style: an understated bronze orb field suggests a living process while staying behind content. */
 export default function OrbField() {
@@ -9,10 +10,10 @@ export default function OrbField() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    let width = 0, height = 0, raf = 0, t = 0;
+    let width = 0, height = 0, raf = 0, t = 0, trackedPointer = false;
     const pointer = { x: 0.5, y: 0.5 };
     const resize = () => { width = canvas.clientWidth; height = canvas.clientHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
-    const move = (event: PointerEvent) => { const rect = canvas.getBoundingClientRect(); pointer.x = (event.clientX - rect.left) / rect.width; pointer.y = (event.clientY - rect.top) / rect.height; };
+    const move = (event: PointerEvent) => { const rect = canvas.getBoundingClientRect(); pointer.x = (event.clientX - rect.left) / rect.width; pointer.y = (event.clientY - rect.top) / rect.height; if (!trackedPointer) { trackedPointer = true; trackEvent("process_orb_interaction"); } };
     const draw = () => {
       t += 0.006; ctx.clearRect(0,0,width,height);
       const count = width < 600 ? 3 : 6;

@@ -9,4 +9,6 @@ export const ENV = {
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN ?? "",
   telegramChatId: process.env.TELEGRAM_CHAT_ID ?? "",
+  turnstileSitekey: process.env.TURNSTILE_SITEKEY ?? "",
+  turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY ?? "",
 };

@@ -5,6 +5,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { sendProjectInquiry } from "./telegram";
+import { validateTurnstileToken } from "./turnstile";
 
 const inquirySchema = z.object({
   name: z.string().trim().min(1).max(120),
@@ -18,6 +19,7 @@ const inquirySchema = z.object({
   fileName: z.string().trim().max(160).optional(),
   website: z.string().max(120).optional(),
   formStartedAt: z.number().int().nonnegative().optional(),
+  turnstileToken: z.string().max(2048).optional(),
 });
 
 const recentInquiries = new Map<string, number>();
@@ -59,6 +61,14 @@ export const appRouter = router({
   inquiry: router({
     send: publicProcedure.input(inquirySchema).mutation(async ({ input, ctx }) => {
       const key = rejectSpam(input, ctx.req);
+      if (process.env.TURNSTILE_SECRET_KEY) {
+        const remoteIp = ctx.req.headers?.["cf-connecting-ip"] || ctx.req.headers?.["x-forwarded-for"] || ctx.req.ip;
+        const validation = await validateTurnstileToken(input.turnstileToken, Array.isArray(remoteIp) ? remoteIp[0] : remoteIp);
+        if (!validation.success) {
+          recentInquiries.delete(key);
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Подтвердите, что вы не робот, и попробуйте еще раз." });
+        }
+      }
       try {
         return await sendProjectInquiry(input);
       } catch (error) {

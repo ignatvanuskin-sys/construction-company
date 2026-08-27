@@ -27,3 +27,5 @@ html.is-loading{overflow:hidden}.preloader{position:fixed;inset:0;z-index:2000;d
 @media (prefers-reduced-motion:reduce){.preloader-mark,.preloader-wordmark,.preloader-meta,.preloader-rule span,.sent svg{animation:none;opacity:1;transform:none}.preloader-rule span{width:100%}}
 
 .honey-field{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+
+.turnstile-widget{min-height:65px;margin:8px 0 4px;display:flex;align-items:center}.turnstile-widget iframe{max-width:100%}.turnstile-placeholder{margin:10px 0;color:#8b8378;font-size:9px;line-height:1.5;letter-spacing:.08em;text-transform:uppercase;border-left:1px solid var(--bronze);padding-left:10px}

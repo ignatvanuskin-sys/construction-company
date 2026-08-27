@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 /** NOVA FORMA style: liquid-metal motion stays a quiet bronze reflection over the hero, never a competing visual. */
 export default function LiquidMetalHero() {
@@ -10,10 +11,11 @@ export default function LiquidMetalHero() {
     const touch = window.matchMedia("(pointer: coarse)").matches;
     const nav = navigator as Navigator & { deviceMemory?: number };
     const capable = !reduced && !touch && (nav.hardwareConcurrency ?? 8) >= 6 && (nav.deviceMemory ?? 8) >= 4;
-    if (!canvas || !capable) return;
+    if (!canvas || !capable) { trackEvent("liquid_metal_fallback", { reason: reduced ? "reduced_motion" : touch ? "coarse_pointer" : "hardware" }); return; }
     const gl = canvas.getContext("webgl2", { alpha: true, antialias: false, powerPreference: "high-performance" }) || canvas.getContext("webgl", { alpha: true, antialias: false, powerPreference: "high-performance" });
-    if (!gl) return;
+    if (!gl) { trackEvent("liquid_metal_fallback", { reason: "webgl_unavailable" }); return; }
     setEnabled(true);
+    trackEvent("liquid_metal_active");
     const context = gl as WebGLRenderingContext;
     const vertexSource = `attribute vec2 position; void main(){gl_Position=vec4(position,0.0,1.0);}`;
     const fragmentSource = `precision mediump float; uniform float uTime; uniform vec2 uResolution; uniform vec2 uPointer; void main(){ vec2 uv=gl_FragCoord.xy/uResolution.xy; vec2 p=(uv-.5)*vec2(uResolution.x/uResolution.y,1.0); p.x+=sin(uTime*.18)*.08; float ring=length(p-vec2(uPointer.x-.5,(uPointer.y-.5)*.65)); float wave=sin(ring*20.0-uTime*1.4+sin(p.x*5.0+uTime)*.55); float sheen=smoothstep(.72,.98,wave*.18+.75)*smoothstep(.55,.05,ring); float edge=smoothstep(.82,.2,abs(ring-.31)); vec3 bronze=vec3(.72,.46,.24); vec3 graphite=vec3(.08,.07,.05); float alpha=(sheen*.16+edge*.07)*smoothstep(.9,.25,ring); gl_FragColor=vec4(mix(graphite,bronze,sheen),alpha); }`;

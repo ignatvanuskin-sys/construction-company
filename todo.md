@@ -19,3 +19,11 @@
 - [x] Add baseline anti-spam protection to the public inquiry mutation.
 - [x] Run final tests, build, desktop/mobile verification, and deployment-readiness checks.
 - [x] Save the final checkpoint and deliver both the website version and reusable skill.
+
+- [ ] Keep Turnstile integration production-ready but disabled until the user supplies Cloudflare keys.
+- [ ] Send the final project commit to https://github.com/ignatvanuskin-sys/construction-company.
+
+- [ ] Add optional Cloudflare Turnstile widget and server Siteverify validation; production keys intentionally not configured by user.
+- [ ] Track successful form sends and meaningful animation interactions with existing analytics.
+- [ ] Run final Turnstile/analytics tests, build, and visual verification.
+- [ ] Save a new checkpoint with the Turnstile and analytics changes.
