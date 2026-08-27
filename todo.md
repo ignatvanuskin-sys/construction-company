@@ -93,3 +93,16 @@
 - [x] Narrow the final polish checklist to the catalog and verified existing route/form states.
 - [x] Save a new release checkpoint after the empty-state and sorting pass.
 - [x] Save a new project checkpoint containing the empty state, sorting, reset analytics, and reset-state tests.
+
+- [x] Audit current theme tokens, project detail routes, gallery assets, review content policy, and catalog URL state.
+- [x] Strengthen the dark theme as the primary evening experience with contrast, focus, and reduced-motion safeguards.
+- [x] Expand every project detail route with richer project metadata, image gallery/lightbox behavior, and a truthful review state that never fabricates testimonials.
+- [x] Sync project search, filters, sorting, and visible-count pagination with shareable URL query parameters and back/forward navigation.
+- [x] Add tests for URL state parsing/serialization, gallery data, and review-safe rendering; run type-check, tests, build, and desktop/mobile checks.
+- [x] Save a new checkpoint containing the project detail, dark-theme, and URL-sync improvements.
+- [x] Use history entries for catalog state changes so browser back/forward restores previous search, filter, sort, and page states.
+- [x] Save a final checkpoint after the URL history correction.
+- [x] Prevent popstate-restored page counts from being overwritten by the filter reset effect and verify history restoration across catalog states.
+- [x] Save a final checkpoint after the corrected page restoration behavior.
+- [x] Preserve the initial URL page value during mount and verify page=2 plus browser back/forward restoration after the fix.
+- [x] Save a final checkpoint after initial and popstate page restoration are verified.

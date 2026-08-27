@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultProjectFilterState, filterProjects, paginateProjects, projectFilters, projectRegions, projectYears, resetProjectFilterState, sortProjects } from "./Home";
+import { defaultProjectFilterState, filterProjects, paginateProjects, parseProjectUrlState, projectFilters, projectRegions, projectYears, resetProjectFilterState, serializeProjectUrlState, sortProjects } from "./Home";
 
 const allFilters = { category: "Все", year: "Все", region: "Все", query: "" };
 
@@ -39,6 +39,13 @@ describe("project filters", () => {
     expect(paginateProjects(projects, 2)).toHaveLength(2);
     expect(paginateProjects(projects, 10)).toHaveLength(4);
     expect(paginateProjects(projects, -1)).toEqual([]);
+  });
+
+  it("round-trips shareable URL state and ignores invalid values", () => {
+    const state = parseProjectUrlState("?type=Коммерция&year=2024&region=Санкт-Петербург&sort=az&q=%D0%BF%D0%BE%D1%80%D1%82&page=3");
+    expect(state).toEqual({ category: "Коммерция", year: "2024", region: "Санкт-Петербург", sort: "az", query: "порт", page: 3 });
+    expect(parseProjectUrlState(serializeProjectUrlState(state))).toEqual(state);
+    expect(parseProjectUrlState("?type=Неизвестный&sort=invalid&page=0")).toMatchObject({ category: "Все", sort: "newest", page: 1 });
   });
 
   it("returns a clean default state for empty-state reset", () => {

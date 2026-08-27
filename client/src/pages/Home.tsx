@@ -39,6 +39,26 @@ export const projectSortOptions = [
   { value: "za", label: "По алфавиту Я–А" },
 ] as const;
 export type ProjectSort = typeof projectSortOptions[number]["value"];
+export type ProjectUrlState = ProjectFilterState & { sort: ProjectSort; page: number };
+export function parseProjectUrlState(search: string): ProjectUrlState {
+  const params = new URLSearchParams(search.startsWith("?") ? search : `?${search}`);
+  const category = projectFilters.includes(params.get("type") || "") ? params.get("type")! : "Все";
+  const year = projectYears.includes(params.get("year") || "") ? params.get("year")! : "Все";
+  const region = projectRegions.includes(params.get("region") || "") ? params.get("region")! : "Все";
+  const sort = projectSortOptions.some(option => option.value === params.get("sort")) ? params.get("sort") as ProjectSort : "newest";
+  const pageValue = Number(params.get("page"));
+  return { category, year, region, sort, query: params.get("q") || "", page: Number.isFinite(pageValue) && pageValue > 0 ? Math.floor(pageValue) : 1 };
+}
+export function serializeProjectUrlState(state: ProjectUrlState) {
+  const params = new URLSearchParams();
+  if (state.category !== "Все") params.set("type", state.category);
+  if (state.year !== "Все") params.set("year", state.year);
+  if (state.region !== "Все") params.set("region", state.region);
+  if (state.sort !== "newest") params.set("sort", state.sort);
+  if (state.query.trim()) params.set("q", state.query.trim());
+  if (state.page > 1) params.set("page", String(state.page));
+  return params.toString();
+}
 export function sortProjects<T extends { name: string; addedAt: string }>(items: T[], sort: ProjectSort) {
   return [...items].sort((a, b) => sort === "az" ? a.name.localeCompare(b.name, "ru") : sort === "za" ? b.name.localeCompare(a.name, "ru") : sort === "oldest" ? a.addedAt.localeCompare(b.addedAt) : b.addedAt.localeCompare(a.addedAt));
 }
@@ -104,12 +124,13 @@ function Inquiry(){
 }
 
 export default function Home(){
-  const [selectedProjectFilter, setSelectedProjectFilter] = useState("Все");
-  const [selectedProjectYear, setSelectedProjectYear] = useState("Все");
-  const [selectedProjectRegion, setSelectedProjectRegion] = useState("Все");
-  const [projectQuery, setProjectQuery] = useState("");
-  const [selectedProjectSort, setSelectedProjectSort] = useState<ProjectSort>("newest");
-  const [visibleProjectCount, setVisibleProjectCount] = useState(PROJECT_PAGE_SIZE);
+  const initialUrlState: ProjectUrlState = typeof window !== "undefined" ? parseProjectUrlState(window.location.search) : { ...resetProjectFilterState(), page: 1 };
+  const [selectedProjectFilter, setSelectedProjectFilter] = useState(initialUrlState.category);
+  const [selectedProjectYear, setSelectedProjectYear] = useState(initialUrlState.year);
+  const [selectedProjectRegion, setSelectedProjectRegion] = useState(initialUrlState.region);
+  const [projectQuery, setProjectQuery] = useState(initialUrlState.query);
+  const [selectedProjectSort, setSelectedProjectSort] = useState<ProjectSort>(initialUrlState.sort);
+  const [visibleProjectCount, setVisibleProjectCount] = useState(initialUrlState.page * PROJECT_PAGE_SIZE);
   const filteredProjects = useMemo(() => filterProjects({ category: selectedProjectFilter, year: selectedProjectYear, region: selectedProjectRegion, query: projectQuery }), [selectedProjectFilter, selectedProjectYear, selectedProjectRegion, projectQuery]);
   const sortedFilteredProjects = useMemo(() => sortProjects(filteredProjects, selectedProjectSort), [filteredProjects, selectedProjectSort]);
   const visibleFilteredProjects = useMemo(() => paginateProjects(sortedFilteredProjects, visibleProjectCount), [sortedFilteredProjects, visibleProjectCount]);
@@ -117,7 +138,11 @@ export default function Home(){
   const [exitingProjectSlugs, setExitingProjectSlugs] = useState<Set<string>>(() => new Set());
   const [projectGridVersion, setProjectGridVersion] = useState(0);
   const [isProjectGridUpdating, setIsProjectGridUpdating] = useState(false);
+  const isApplyingHistoryState = useRef(false);
+  const isInitialProjectState = useRef(true);
   useEffect(() => {
+    if (isApplyingHistoryState.current) return;
+    if (isInitialProjectState.current) { isInitialProjectState.current = false; return; }
     setVisibleProjectCount(PROJECT_PAGE_SIZE);
   }, [selectedProjectFilter, selectedProjectYear, selectedProjectRegion, projectQuery, selectedProjectSort]);
   useEffect(() => {
@@ -144,6 +169,26 @@ export default function Home(){
   }, [visibleFilteredProjects]);
   const hasProjectFilters = selectedProjectFilter !== "Все" || selectedProjectYear !== "Все" || selectedProjectRegion !== "Все" || projectQuery.trim() !== "" || selectedProjectSort !== "newest";
   const hasMoreProjects = visibleProjectCount < filteredProjects.length;
+  useEffect(() => {
+    const onPopState = () => {
+      const next = parseProjectUrlState(window.location.search);
+      isApplyingHistoryState.current = true;
+      setSelectedProjectFilter(next.category); setSelectedProjectYear(next.year); setSelectedProjectRegion(next.region); setProjectQuery(next.query); setSelectedProjectSort(next.sort); setVisibleProjectCount(next.page * PROJECT_PAGE_SIZE);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const query = serializeProjectUrlState({ category: selectedProjectFilter, year: selectedProjectYear, region: selectedProjectRegion, sort: selectedProjectSort, query: projectQuery, page: Math.max(1, Math.ceil(visibleProjectCount / PROJECT_PAGE_SIZE)) });
+    const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== nextUrl) {
+      if (isApplyingHistoryState.current) isApplyingHistoryState.current = false;
+      else window.history.pushState(null, "", nextUrl);
+    } else {
+      isApplyingHistoryState.current = false;
+    }
+  }, [selectedProjectFilter, selectedProjectYear, selectedProjectRegion, selectedProjectSort, projectQuery, visibleProjectCount]);
   useEffect(() => {
     if (selectedProjectFilter !== "Все") trackEvent("project_filter_select", { filter: selectedProjectFilter });
   }, [selectedProjectFilter]);
