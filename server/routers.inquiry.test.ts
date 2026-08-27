@@ -26,3 +26,29 @@ describe("inquiry.send", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
+
+describe("inquiry anti-spam", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("rejects a filled honeypot without contacting Telegram", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    const ctx = { user: null, req: { ip: "honeypot-test", headers: {} } as TrpcContext["req"], res: {} as TrpcContext["res"] };
+    await expect(appRouter.createCaller(ctx).inquiry.send({ name: "Bot", phone: "+7 900 000-00-00", website: "https://spam.example" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects submissions made too quickly", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    const ctx = { user: null, req: { ip: "speed-test", headers: {} } as TrpcContext["req"], res: {} as TrpcContext["res"] };
+    await expect(appRouter.createCaller(ctx).inquiry.send({ name: "Bot", phone: "+7 900 000-00-00", formStartedAt: Date.now() })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("throttles repeated submissions from the same request key", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    const ctx = { user: null, req: { ip: "repeat-test", headers: {} } as TrpcContext["req"], res: {} as TrpcContext["res"] };
+    const caller = appRouter.createCaller(ctx);
+    await caller.inquiry.send({ name: "Ольга", phone: "+7 900 000-00-00" });
+    await expect(caller.inquiry.send({ name: "Ольга", phone: "+7 900 000-00-00" })).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+  });
+});

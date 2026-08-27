@@ -12,3 +12,10 @@
 - [x] Add secure Telegram Bot API submission endpoint for contact form delivery to @eloquncy.
 - [x] Add tests for Telegram payload validation and submission behavior.
 - [x] Verify the upgraded project, visual effects, mobile fallback, and Telegram flow.
+
+- [x] Create and validate a reusable NOVA FORMA website-motion-and-delivery skill with /skill-creator.
+- [x] Add a polished preloader before the hero appears.
+- [x] Improve the form success notification with a clear Telegram delivery state.
+- [x] Add baseline anti-spam protection to the public inquiry mutation.
+- [x] Run final tests, build, desktop/mobile verification, and deployment-readiness checks.
+- [x] Save the final checkpoint and deliver both the website version and reusable skill.
